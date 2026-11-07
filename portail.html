@@ -15,6 +15,7 @@ header{display:flex;justify-content:space-between;align-items:center;padding:15p
 label{display:block;text-align:left;margin:18px 0 6px;font-size:14px;color:#ccc}
 input{width:100%;padding:14px;border-radius:10px;border:1px solid #333;background:#0a0a2e;color:#fff;font-size:16px;outline:none}
 input:focus{border-color:#00e5ff}
+input::placeholder{color:#555}
 .btn{width:100%;padding:15px;border:none;border-radius:10px;background:#00e5ff;color:#001;font-weight:800;font-size:16px;margin-top:20px;cursor:pointer}
 .wrap{max-width:1100px;margin:0 auto;padding:0 20px 30px;display:none}
 .grid{display:grid;grid-template-columns:1fr 1.2fr;gap:20px}
@@ -45,9 +46,9 @@ input:focus{border-color:#00e5ff}
 <h1>Connectez Votre Appareil</h1>
 <p>Entrez MAC et Clé pour gérer vos playlists</p>
 <label>Adresse MAC de l'Appareil</label>
-<input id="mac" placeholder="A4:C3:C8:87:92:29" maxlength="17" autocomplete="off">
+<input id="mac" placeholder="00:00:00:00:00:00" maxlength="17" autocomplete="off" autocapitalize="characters" spellcheck="false">
 <label>Clé de l'Appareil</label>
-<input id="key" placeholder="535482" inputmode="numeric">
+<input id="key" type="password" placeholder="••••••" inputmode="numeric" autocomplete="off">
 <button class="btn" onclick="login()">Se Connecter & Gérer les Playlists</button>
 <div class="error" id="err">MAC ou Clé incorrect, 3awd jereb</div>
 </div>
@@ -73,26 +74,26 @@ input:focus{border-color:#00e5ff}
 
 <div id="formM3U">
 <label>Nom de la Playlist</label>
-<input id="nomM3U" placeholder="ex: Ma Ligne VIP">
+<input placeholder="ex: Ma Ligne VIP" id="nomM3U" autocomplete="off">
 <label>Lien M3U Plus</label>
-<input id="lienM3U" placeholder="http://serveur.com/get.php?username=...&type=m3u_plus">
+<input id="lienM3U" placeholder="http://..." autocomplete="off">
 <label>🔒 Code PIN de Protection (Optionnel - Min 4 chiffres)</label>
-<input id="pinM3U" placeholder="Entrez 4+ chiffres pour verrouiller la liste" inputmode="numeric">
+<input id="pinM3U" placeholder="••••" inputmode="numeric" autocomplete="off">
 <div class="small">Lorsqu'elle est protégée par un code PIN, la liste M3U sera masquée et ne pourra pas être supprimée sans code.</div>
 <button class="btn-save" onclick="saveM3U()">💾 Enregistrer & Synchroniser sur la TV</button>
 </div>
 
 <div id="formXtream" style="display:none">
 <label>Nom de la Playlist</label>
-<input id="nomX" placeholder="ex: Ma Ligne VIP">
+<input id="nomX" placeholder="ex: Ma Ligne VIP" autocomplete="off">
 <label>URL / Serveur Host</label>
-<input id="hostX" placeholder="http://serveur-iptv.com:8080">
+<input id="hostX" placeholder="http://serveur-iptv.com:8080" autocomplete="off">
 <div class="two">
-<div><label>Nom d'Utilisateur</label><input id="userX" placeholder="Nom d'utilisateur"></div>
-<div><label>Mot de Passe</label><input id="passX" placeholder="Mot de passe"></div>
+<div><label>Nom d'Utilisateur</label><input id="userX" placeholder="" autocomplete="off"></div>
+<div><label>Mot de Passe</label><input id="passX" placeholder="" autocomplete="off"></div>
 </div>
 <label>🔒 Code PIN de Protection (Optionnel - Min 4 chiffres)</label>
-<input id="pinX" placeholder="Entrez 4+ chiffres pour verrouiller la liste" inputmode="numeric">
+<input id="pinX" placeholder="••••" inputmode="numeric" autocomplete="off">
 <div class="small">Lorsqu'elle est protégée par un code PIN, la liste Xtream sera masquée et ne pourra pas être supprimée sans code.</div>
 <button class="btn-save" onclick="saveXtream()">💾 Enregistrer & Synchroniser sur la TV</button>
 </div>
@@ -107,7 +108,16 @@ input:focus{border-color:#00e5ff}
 
 <script>
 const macInput=document.getElementById('mac');
-macInput.addEventListener('input',function(){let v=this.value.toUpperCase().replace(/[^A-F0-9]/g,'').slice(0,12);let p=[];for(let i=0;i<v.length;i+=2)p.push(v.slice(i,i+2));this.value=p.join(':');});
+// HNA L FIX DYAL NO9AT : kaykhdem b sghar w kbar, w b copier-coller
+macInput.addEventListener('input',function(){
+  let raw = this.value.toUpperCase().replace(/[^A-F0-9]/g,'').slice(0,12);
+  let out = '';
+  for(let i=0;i<raw.length;i++){
+    if(i>0 && i%2===0) out += ':';
+    out += raw[i];
+  }
+  this.value = out;
+});
 document.getElementById('key').addEventListener('input',function(){this.value=this.value.replace(/[^0-9]/g,'').slice(0,8);});
 let playlists=JSON.parse(localStorage.getItem('adil_playlists')||'[]');
 function showTab(t){
