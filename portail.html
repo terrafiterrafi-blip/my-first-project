@@ -31,7 +31,8 @@ button{width:100%;padding:14px;border:none;border-radius:10px;background:#00cfff
 <script>
 let macInput = document.getElementById('mac');
 macInput.addEventListener('input', function(){
-  let v = this.value.replace(/[^A-Fa-f0-9]/g, '').toUpperCase();
+  // دابا كيقبل أي حرف من A حتى Z و أي رقم
+  let v = this.value.replace(/[^A-Za-z0-9]/g, '').toUpperCase();
   let out = '';
   for(let i=0; i<v.length; i++){
     if(i>0 && i%2==0) out += ':';
