@@ -22,6 +22,7 @@ button{padding:12px;border:none;border-radius:10px;background:#00cfff;color:whit
 .field{position:relative}
 .field input{padding-right:45px}
 .eye{position:absolute;right:8px;top:50%;transform:translateY(-50%);background:#2a2a5a;padding:6px 10px;border-radius:8px;cursor:pointer;font-size:16px}
+.exemple{background:#05081f;padding:12px;border-radius:10px;border:1px dashed #444;color:#aaa;font-size:13px;margin-top:10px}
 #pinModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:999;align-items:center;justify-content:center}
 #pinModal.show{display:flex}
 .modal-box{background:#1e1e4a;padding:25px;border-radius:15px;width:90%;max-width:350px;text-align:center}
@@ -35,8 +36,9 @@ button{padding:12px;border:none;border-radius:10px;background:#00cfff;color:whit
 <h3>Aperçu de l'Appareil <span style="background:#ffcc00;color:black;padding:2px 8px;border-radius:10px;font-size:11px">TRIAL</span></h3>
 <p>MAC: <b id="showMac"></b></p>
 <p>Expiration Abonnement: <b>14/11/2026</b> | Type d'Accès: <b>Essai Gratuit 7 Jours (Actif)</b></p>
-<h3>Mes Playlists Actives</h3>
+<h3>Mes Playlists Actives (<span id="nbPlay">0</span>)</h3>
 <div id="liste"></div>
+<div class="exemple">💡 <b>Exemple kifach tbedda:</b><br>1. 3mer Smiya - Ex: Ma Chaine<br>2. 3mer Lien M3U wla Codes Xtream<br>3. Wrek Enregistrer - Ghadi tban lik hna</div>
 </div>
 <div class="card">
 <h3>Ajouter une Playlist</h3>
@@ -46,23 +48,22 @@ button{padding:12px;border:none;border-radius:10px;background:#00cfff;color:whit
 <button id="btnXtream" onclick="showTab('xtream')">Codes Xtream</button>
 </div>
 <div id="formM3U">
-<input id="nomM3U" placeholder="Nom de la Playlist">
-<div class="field"><input id="lienM3U" type="text" placeholder="Lien M3U / http://..."><span class="eye" onclick="toggleEye('lienM3U',this)">🙈</span></div>
-<div class="field"><input id="pinM3U" type="text" inputmode="numeric" maxlength="6" placeholder="Code PIN (6 chiffres)"><span class="eye" onclick="toggleEye('pinM3U',this)">🙈</span></div>
+<input id="nomM3U" placeholder="Nom de la Playlist - Ex: Ma Chaine" autocomplete="off">
+<div class="field"><input id="lienM3U" type="text" placeholder="Lien M3U / http://..." autocomplete="off"><span class="eye" onclick="toggleEye('lienM3U',this)">🙈</span></div>
+<div class="field"><input id="pinM3U" type="text" inputmode="numeric" maxlength="6" placeholder="Code PIN (6 chiffres) - Optionnel" autocomplete="off"><span class="eye" onclick="toggleEye('pinM3U',this)">🙈</span></div>
 </div>
 <div id="formXtream" style="display:none">
-<input id="nomX" placeholder="Nom de la Playlist">
-<div class="field"><input id="hostX" type="text" placeholder="URL / Serveur Host - http://...:8080"><span class="eye" onclick="toggleEye('hostX',this)">🙈</span></div>
+<input id="nomX" placeholder="Nom de la Playlist - Ex: Ma Chaine" autocomplete="off">
+<div class="field"><input id="hostX" type="text" placeholder="URL / Serveur Host - http://...:8080" autocomplete="off"><span class="eye" onclick="toggleEye('hostX',this)">🙈</span></div>
 <div style="display:flex;gap:10px">
-<div class="field" style="flex:1"><input id="userX" type="text" placeholder="Nom d'Utilisateur"><span class="eye" onclick="toggleEye('userX',this)">🙈</span></div>
-<div class="field" style="flex:1"><input id="passX" type="text" placeholder="Mot de passe"><span class="eye" onclick="toggleEye('passX',this)">🙈</span></div>
+<div class="field" style="flex:1"><input id="userX" type="text" placeholder="Nom d'Utilisateur" autocomplete="off"><span class="eye" onclick="toggleEye('userX',this)">🙈</span></div>
+<div class="field" style="flex:1"><input id="passX" type="text" placeholder="Mot de passe" autocomplete="off"><span class="eye" onclick="toggleEye('passX',this)">🙈</span></div>
 </div>
-<div class="field"><input id="pinX" type="text" inputmode="numeric" maxlength="6" placeholder="Code PIN (6 chiffres)"><span class="eye" onclick="toggleEye('pinX',this)">🙈</span></div>
+<div class="field"><input id="pinX" type="text" inputmode="numeric" maxlength="6" placeholder="Code PIN (6 chiffres) - Optionnel" autocomplete="off"><span class="eye" onclick="toggleEye('pinX',this)">🙈</span></div>
 </div>
 <button style="width:100%;margin-top:10px" onclick="enregistrer()">Enregistrer & Synchroniser sur la TV</button>
 <button id="btnCancel" class="btn-cancel" style="display:none" onclick="annulerModif()">Annuler la modification</button>
 <p id="msg" style="color:#00ff88"></p>
-<p style="color:#aaa;font-size:12px">Mli katkteb, kolchi bayen lik. Mli katdir Enregistrer, kolchi kaytkhba.</p>
 </div>
 </div>
 <div id="pinModal"><div class="modal-box">
@@ -76,10 +77,13 @@ button{padding:12px;border:none;border-radius:10px;background:#00cfff;color:whit
 <p id="pinError" style="color:#ff4444;display:none">PIN incorrect !</p>
 </div></div>
 <script>
-let playlists = JSON.parse(localStorage.getItem('sw_playlists') || '[]');
+let macActuel = localStorage.getItem('sw_mac') || 'NO-MAC';
+document.getElementById('showMac').innerText = macActuel;
+// HNA LMOCHKIL KAN - DABA KOL MAC 3ANDO PLAYLISTS DYALO BO7DO
+let cleStockage = 'sw_playlists_' + macActuel;
+let playlists = JSON.parse(localStorage.getItem(cleStockage) || '[]');
 let editIndex = -1;
 let pinCallback = null;
-document.getElementById('showMac').innerText = localStorage.getItem('sw_mac') || 'AA:C3:C8:87:92:29';
 function toggleEye(id, el){
   let inp = document.getElementById(id);
   if(inp.type==='text'){ inp.type='password'; el.innerText='👁️'; }
@@ -128,8 +132,9 @@ function verifierPIN(i, callback){
   demanderPIN(playlists[i], callback);
 }
 function afficher(){
+  document.getElementById('nbPlay').innerText = playlists.length;
   let div = document.getElementById('liste');
-  if(playlists.length==0){ div.innerHTML='<p style="color:#aaa">Aucune playlist pour le moment</p>'; return; }
+  if(playlists.length==0){ div.innerHTML='<p style="color:#aaa">Aucune playlist pour le moment - 0 playlist<br>Zid loula dyalek mn limen 👉</p>'; return; }
   div.innerHTML = playlists.map((p,i)=>`
     <div class="list-item">
       <span>📺 <b>${p.nom}</b> - ${p.type} ${p.pin ? '🔒' : ''}</span>
@@ -156,8 +161,8 @@ function enregistrer(){
     playlists[editIndex]=data; editIndex=-1;
     document.getElementById('msg').innerText='Playlist Modifiée !';
   }
-  else { playlists.push(data); document.getElementById('msg').innerText='Playlist Enregistrée ! Synchronisée sur la TV'; }
-  localStorage.setItem('sw_playlists', JSON.stringify(playlists));
+  else { playlists.push(data); document.getElementById('msg').innerText='Playlist Enregistrée !'; }
+  localStorage.setItem(cleStockage, JSON.stringify(playlists));
   afficher();
   viderForm();
   document.getElementById('editInfo').style.display='none';
@@ -195,7 +200,7 @@ function supprimer(i){
     if(!ok) return;
     if(confirm('Wach bghiti tms7 had la playlist: '+playlists[i].nom+' ?')){
       playlists.splice(i,1);
-      localStorage.setItem('sw_playlists', JSON.stringify(playlists));
+      localStorage.setItem(cleStockage, JSON.stringify(playlists));
       afficher();
       if(editIndex==i){ annulerModif(); }
     }
