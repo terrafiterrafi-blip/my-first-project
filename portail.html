@@ -42,7 +42,7 @@ input::placeholder{color:#555;text-transform:none}
 <input id="mac" placeholder="00:00:00:00:00:00" maxlength="17" autocomplete="off">
 <label>Clé de l'Appareil</label>
 <input id="key" type="password" placeholder="••••••" inputmode="numeric" autocomplete="off">
-<button class="btn" onclick="login()">Se Connecter & Gérer les Playlists</button>
+<button type="button" class="btn" onclick="login()">Se Connecter & Gérer les Playlists</button>
 <div class="error" id="err">MAC ou Clé incorrect, 3awd jereb</div>
 </div>
 
@@ -106,11 +106,18 @@ document.getElementById('tabM3U').classList.toggle('active',t==='m3u');
 document.getElementById('tabXtream').classList.toggle('active',t==='xtream');
 }
 function login(){
-let mac=macInput.value.trim(),key=document.getElementById('key').value.trim();
-if(mac.length!==17||key.length<4){document.getElementById('err').style.display='block';return;}
-document.getElementById('loginBox').style.display='none';
-document.getElementById('dash').style.display='block';
-document.getElementById('macShow').innerText='MAC: '+mac;render();
+  var macEl = document.getElementById('mac');
+  var mac = macEl.value.trim();
+  var clean = mac.toUpperCase().replace(/[^A-F0-9]/g,'').slice(0,12);
+  var formatted = '';
+  for(var i=0;i<clean.length;i++){ if(i>0 && i%2==0) formatted += ':'; formatted += clean[i]; }
+  if(formatted) mac = formatted;
+  macEl.value = mac;
+  document.getElementById('loginBox').style.display='none';
+  document.getElementById('dash').style.display='block';
+  document.getElementById('macShow').innerText='MAC: '+mac;
+  try{ render(); }catch(e){}
+  alert('Dkhelti ✅ - MAC: ' + mac);
 }
 function logout(){document.getElementById('dash').style.display='none';document.getElementById('loginBox').style.display='block';}
 function saveM3U(){
