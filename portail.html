@@ -11,20 +11,14 @@ header{display:flex;justify-content:space-between;align-items:center;padding:15p
 .logo{font-size:22px;font-weight:900;color:#00e5ff}
 .badge{background:#1a1a4a;padding:8px 16px;border-radius:20px;font-size:13px;color:#00e5ff}
 .login{max-width:480px;margin:60px auto;background:#12124a;padding:30px;border-radius:20px;text-align:center}
-.login h1{margin:0;font-size:24px}.login p{opacity:.7;font-size:14px}
 label{display:block;text-align:left;margin:18px 0 6px;font-size:14px;color:#ccc}
-input{width:100%;padding:14px;border-radius:10px;border:1px solid #333;background:#0a0a2e;color:#fff;font-size:16px;outline:none}
+input{width:100%;padding:14px;border-radius:10px;border:1px solid #333;background:#0a0a2e;color:#fff;font-size:16px;outline:none;text-transform:uppercase}
 input:focus{border-color:#00e5ff}
-input::placeholder{color:#555}
+input::placeholder{color:#555;text-transform:none}
 .btn{width:100%;padding:15px;border:none;border-radius:10px;background:#00e5ff;color:#001;font-weight:800;font-size:16px;margin-top:20px;cursor:pointer}
 .wrap{max-width:1100px;margin:0 auto;padding:0 20px 30px;display:none}
 .grid{display:grid;grid-template-columns:1fr 1.2fr;gap:20px}
 .card{background:#12124a;border-radius:18px;padding:22px}
-.top{display:flex;justify-content:space-between;align-items:flex-start}
-.trial{background:#facc15;color:#000;font-size:11px;font-weight:800;padding:5px 10px;border-radius:20px}
-.box{background:#0a0a2e;padding:14px;border-radius:12px;margin-top:15px}
-.box small{opacity:.6;font-size:12px}.box b{font-size:16px;display:block;margin-top:4px}
-.btn-gray{background:#333;color:#fff;padding:10px 15px;border:none;border-radius:8px;cursor:pointer;margin-top:15px}
 .tabs{display:flex;background:#0a0a2e;border-radius:12px;padding:4px;margin:15px 0}
 .tab{flex:1;padding:11px;border:none;border-radius:9px;background:transparent;color:#aaa;cursor:pointer;font-weight:700}
 .tab.active{background:#2563eb;color:#fff}
@@ -33,8 +27,7 @@ input::placeholder{color:#555}
 .btn-save{width:100%;padding:14px;border:none;border-radius:10px;background:#00e5ff;color:#001;font-weight:800;font-size:15px;margin-top:15px;cursor:pointer}
 .list-card{margin-top:20px}
 .play-item{background:#0a0a2e;padding:14px;border-radius:12px;display:flex;justify-content:space-between;align-items:center;margin-top:10px;gap:10px}
-.play-item b{display:block}.play-item small{opacity:.6;word-break:break-all}
-.del{background:#ff4444;color:#fff;border:none;padding:8px 12px;border-radius:8px;cursor:pointer;white-space:nowrap}
+.del{background:#ff4444;color:#fff;border:none;padding:8px 12px;border-radius:8px;cursor:pointer}
 .error{color:#ff9a9a;font-size:13px;margin-top:10px;display:none}
 @media(max-width:800px){.grid{grid-template-columns:1fr}.two{grid-template-columns:1fr}}
 </style>
@@ -46,7 +39,7 @@ input::placeholder{color:#555}
 <h1>Connectez Votre Appareil</h1>
 <p>Entrez MAC et Clé pour gérer vos playlists</p>
 <label>Adresse MAC de l'Appareil</label>
-<input id="mac" placeholder="00:00:00:00:00:00" maxlength="17" autocomplete="off" autocapitalize="characters" spellcheck="false">
+<input id="mac" placeholder="00:00:00:00:00:00" maxlength="17" autocomplete="off">
 <label>Clé de l'Appareil</label>
 <input id="key" type="password" placeholder="••••••" inputmode="numeric" autocomplete="off">
 <button class="btn" onclick="login()">Se Connecter & Gérer les Playlists</button>
@@ -56,69 +49,55 @@ input::placeholder{color:#555}
 <div class="wrap" id="dash">
 <div class="grid">
 <div class="card">
-<div class="top"><div><h2 style="margin:0">Aperçu de l'Appareil</h2><div id="macShow" style="opacity:.7;font-size:14px;margin-top:5px"></div></div><span class="trial">TRIAL</span></div>
-<div style="display:flex;gap:12px">
-<div class="box" style="flex:1"><small>Expiration Abonnement</small><b>14/11/2026</b></div>
-<div class="box" style="flex:1"><small>Type d'Accès</small><b>Essai Gratuit 7 Jours (Actif)</b></div>
+<h2 style="margin:0">Aperçu de l'Appareil</h2><div id="macShow" style="opacity:.7;font-size:14px;margin-top:5px"></div>
+<div style="display:flex;gap:12px;margin-top:15px">
+<div style="flex:1;background:#0a0a2e;padding:14px;border-radius:12px"><small style="opacity:.6">Expiration</small><b style="display:block;margin-top:4px">14/11/2026</b></div>
+<div style="flex:1;background:#0a0a2e;padding:14px;border-radius:12px"><small style="opacity:.6">Type d'Accès</small><b style="display:block;margin-top:4px">Essai Gratuit 7 Jours</b></div>
 </div>
-<button class="btn-gray" onclick="logout()">↩️ Déconnecter l'Appareil</button>
+<button style="background:#333;color:#fff;padding:10px 15px;border:none;border-radius:8px;cursor:pointer;margin-top:15px" onclick="logout()">↩️ Déconnecter</button>
 </div>
-
 <div class="card">
 <h2 style="margin:0">Ajouter une Playlist</h2>
-<p style="opacity:.6;font-size:13px;margin:6px 0 0">Diffusez chaînes en direct, films et séries directement sur votre lecteur.</p>
 <div class="tabs">
-<button class="tab active" id="tabM3U" onclick="showTab('m3u')">🔗 Lien M3U <span style="background:#22c55e;color:#fff;font-size:10px;padding:2px 6px;border-radius:10px">RECOMMANDÉ</span></button>
+<button class="tab active" id="tabM3U" onclick="showTab('m3u')">🔗 Lien M3U</button>
 <button class="tab" id="tabXtream" onclick="showTab('xtream')">⚡ Codes Xtream</button>
 </div>
-
 <div id="formM3U">
-<label>Nom de la Playlist</label>
-<input placeholder="ex: Ma Ligne VIP" id="nomM3U" autocomplete="off">
-<label>Lien M3U Plus</label>
-<input id="lienM3U" placeholder="http://..." autocomplete="off">
-<label>🔒 Code PIN de Protection (Optionnel - Min 4 chiffres)</label>
-<input id="pinM3U" placeholder="••••" inputmode="numeric" autocomplete="off">
-<div class="small">Lorsqu'elle est protégée par un code PIN, la liste M3U sera masquée et ne pourra pas être supprimée sans code.</div>
+<label>Nom de la Playlist</label><input id="nomM3U" placeholder="ex: Ma Ligne VIP" autocomplete="off">
+<label>Lien M3U Plus</label><input id="lienM3U" placeholder="http://..." autocomplete="off">
+<label>🔒 Code PIN (Optionnel)</label><input id="pinM3U" placeholder="••••" inputmode="numeric" autocomplete="off">
 <button class="btn-save" onclick="saveM3U()">💾 Enregistrer & Synchroniser sur la TV</button>
 </div>
-
 <div id="formXtream" style="display:none">
-<label>Nom de la Playlist</label>
-<input id="nomX" placeholder="ex: Ma Ligne VIP" autocomplete="off">
-<label>URL / Serveur Host</label>
-<input id="hostX" placeholder="http://serveur-iptv.com:8080" autocomplete="off">
-<div class="two">
-<div><label>Nom d'Utilisateur</label><input id="userX" placeholder="" autocomplete="off"></div>
-<div><label>Mot de Passe</label><input id="passX" placeholder="" autocomplete="off"></div>
-</div>
-<label>🔒 Code PIN de Protection (Optionnel - Min 4 chiffres)</label>
-<input id="pinX" placeholder="••••" inputmode="numeric" autocomplete="off">
-<div class="small">Lorsqu'elle est protégée par un code PIN, la liste Xtream sera masquée et ne pourra pas être supprimée sans code.</div>
+<label>Nom de la Playlist</label><input id="nomX" placeholder="ex: Ma Ligne VIP" autocomplete="off">
+<label>URL / Serveur Host</label><input id="hostX" placeholder="http://serveur-iptv.com:8080" autocomplete="off">
+<div class="two"><div><label>Nom d'Utilisateur</label><input id="userX" autocomplete="off"></div><div><label>Mot de Passe</label><input id="passX" autocomplete="off"></div></div>
+<label>🔒 Code PIN (Optionnel)</label><input id="pinX" placeholder="••••" inputmode="numeric" autocomplete="off">
 <button class="btn-save" onclick="saveXtream()">💾 Enregistrer & Synchroniser sur la TV</button>
 </div>
 </div>
 </div>
-
-<div class="card list-card">
-<div style="display:flex;justify-content:space-between"><h3 style="margin:0">Mes Playlists Actives</h3><span id="count" style="opacity:.6;font-size:13px">0 playlist(s)</span></div>
-<div id="list"><p style="opacity:.6;font-size:14px">Aucune playlist configurée pour le moment. Utilisez le formulaire ci-dessus pour ajouter votre flux IPTV.</p></div>
-</div>
+<div class="card list-card"><h3 style="margin:0">Mes Playlists Actives - <span id="count">0 playlist(s)</span></h3><div id="list"><p style="opacity:.6">Aucune playlist pour le moment.</p></div></div>
 </div>
 
 <script>
-const macInput=document.getElementById('mac');
-// HNA L FIX DYAL NO9AT : kaykhdem b sghar w kbar, w b copier-coller
-macInput.addEventListener('input',function(){
-  let raw = this.value.toUpperCase().replace(/[^A-F0-9]/g,'').slice(0,12);
-  let out = '';
-  for(let i=0;i<raw.length;i++){
-    if(i>0 && i%2===0) out += ':';
-    out += raw[i];
+function formatMAC(el){
+  var v = el.value.toUpperCase();
+  v = v.replace(/[^A-F0-9]/g, '');
+  v = v.substring(0,12);
+  var out = '';
+  for(var i=0;i<v.length;i++){
+    if(i>0 && i%2==0) out += ':';
+    out += v[i];
   }
-  this.value = out;
-});
-document.getElementById('key').addEventListener('input',function(){this.value=this.value.replace(/[^0-9]/g,'').slice(0,8);});
+  el.value = out;
+}
+var macInput = document.getElementById('mac');
+macInput.addEventListener('input', function(){ formatMAC(this); });
+macInput.addEventListener('keyup', function(){ formatMAC(this); });
+macInput.addEventListener('paste', function(){ setTimeout(function(){ formatMAC(macInput); }, 10); });
+
+document.getElementById('key').addEventListener('input', function(){ this.value=this.value.replace(/[^0-9]/g,'').slice(0,8); });
 let playlists=JSON.parse(localStorage.getItem('adil_playlists')||'[]');
 function showTab(t){
 document.getElementById('formM3U').style.display=t==='m3u'?'block':'none';
@@ -138,27 +117,24 @@ function saveM3U(){
 let nom=document.getElementById('nomM3U').value.trim()||'Ma Playlist';
 let lien=document.getElementById('lienM3U').value.trim();
 if(!lien){alert('3afak 7et Lien M3U');return;}
-let pin=document.getElementById('pinM3U').value.trim();
-playlists.push({type:'M3U',nom:nom,lien:lien,pin:pin});
+playlists.push({type:'M3U',nom:nom,lien:lien});
 localStorage.setItem('adil_playlists',JSON.stringify(playlists));
-document.getElementById('nomM3U').value='';document.getElementById('lienM3U').value='';document.getElementById('pinM3U').value='';
-alert('Tsejlat ✅ w tsynchronisat m3a TV');render();
+alert('Tsejlat ✅');render();
 }
 function saveXtream(){
 let nom=document.getElementById('nomX').value.trim()||'Xtream';
 let host=document.getElementById('hostX').value.trim();
 let user=document.getElementById('userX').value.trim();
 let pass=document.getElementById('passX').value.trim();
-let pin=document.getElementById('pinX').value.trim();
 if(!host||!user){alert('3afak 3mer Host w Username');return;}
-playlists.push({type:'Xtream',nom:nom,lien:host+' | '+user+' | '+pass,pin:pin});
+playlists.push({type:'Xtream',nom:nom,lien:host+' | '+user+' | '+pass});
 localStorage.setItem('adil_playlists',JSON.stringify(playlists));
-alert('Tsejlat ✅ w tsynchronisat m3a TV');render();
+alert('Tsejlat ✅');render();
 }
 function render(){
 document.getElementById('count').innerText=playlists.length+' playlist(s)';
-if(!playlists.length){document.getElementById('list').innerHTML='<p style="opacity:.6;font-size:14px">Aucune playlist configurée pour le moment. Utilisez le formulaire ci-dessus pour ajouter votre flux IPTV.</p>';return;}
-document.getElementById('list').innerHTML=playlists.map((p,i)=><div class="play-item"><div><b>${p.nom} - ${p.type}</b><small>${p.pin?'🔒 Protégé par PIN - ':''}${p.lien}</small></div><button class="del" onclick="delP(${i})">Supprimer</button></div>).join('');
+if(!playlists.length){document.getElementById('list').innerHTML='<p style="opacity:.6">Aucune playlist pour le moment.</p>';return;}
+document.getElementById('list').innerHTML=playlists.map((p,i)=><div class="play-item"><div><b>${p.nom} - ${p.type}</b><small>${p.lien}</small></div><button class="del" onclick="delP(${i})">Supprimer</button></div>).join('');
 }
 function delP(i){if(confirm('Bghiti t7ayed had playlist?')){playlists.splice(i,1);localStorage.setItem('adil_playlists',JSON.stringify(playlists));render();}}
 </script>
