@@ -18,6 +18,7 @@ button{padding:12px;border:none;border-radius:10px;background:#00cfff;color:whit
 .actions button{padding:6px 10px;margin-left:5px;font-size:16px}
 .btn-edit{background:#ffaa00}
 .btn-del{background:#ff4444}
+.btn-cancel{background:#555;margin-top:8px;width:100%}
 </style>
 </head>
 <body>
@@ -33,6 +34,7 @@ button{padding:12px;border:none;border-radius:10px;background:#00cfff;color:whit
 </div>
 <div class="card">
 <h3>Ajouter une Playlist</h3>
+<p id="editInfo" style="display:none;background:#ffaa00;color:black;padding:10px;border-radius:10px;font-weight:bold">Modification de: <span id="editName"></span></p>
 <div class="tabs">
 <button id="btnM3U" class="active" onclick="showTab('m3u')">Lien M3U</button>
 <button id="btnXtream" onclick="showTab('xtream')">Codes Xtream</button>
@@ -49,6 +51,7 @@ button{padding:12px;border:none;border-radius:10px;background:#00cfff;color:whit
 <input id="pinX" placeholder="Code PIN de Protection (Optional - Min 4 chiffres)">
 </div>
 <button style="width:100%;margin-top:10px" onclick="enregistrer()">Enregistrer & Synchroniser sur la TV</button>
+<button id="btnCancel" class="btn-cancel" style="display:none" onclick="annulerModif()">Annuler la modification</button>
 <p id="msg" style="color:#00ff88"></p>
 </div>
 </div>
@@ -62,12 +65,41 @@ function showTab(t){
   document.getElementById('btnM3U').className = t=='m3u'?'active':'';
   document.getElementById('btnXtream').className = t=='xtream'?'active':'';
 }
+function viderForm(){
+  document.getElementById('nomM3U').value='';
+  document.getElementById('lienM3U').value='';
+  document.getElementById('pinM3U').value='';
+  document.getElementById('nomX').value='';
+  document.getElementById('hostX').value='';
+  document.getElementById('userX').value='';
+  document.getElementById('passX').value='';
+  document.getElementById('pinX').value='';
+}
+function annulerModif(){
+  editIndex=-1;
+  viderForm();
+  document.getElementById('editInfo').style.display='none';
+  document.getElementById('btnCancel').style.display='none';
+  document.getElementById('msg').innerText='';
+  showTab('m3u');
+}
+function verifierPIN(i){
+  let p = playlists[i];
+  if(!p.pin || p.pin==''){ return true; }
+  let saisie = prompt('Cette playlist est protégée 🔒\nEntrez le Code PIN pour continuer:');
+  if(saisie === null){ return false; }
+  if(saisie.trim() !== String(p.pin)){
+    alert('PIN incorrect ! Accès refusé.');
+    return false;
+  }
+  return true;
+}
 function afficher(){
   let div = document.getElementById('liste');
   if(playlists.length==0){ div.innerHTML='<p style="color:#aaa">Aucune playlist pour le moment</p>'; return; }
   div.innerHTML = playlists.map((p,i)=>`
     <div class="list-item">
-      <span>📺 <b>${p.nom}</b> - ${p.type}</span>
+      <span>📺 <b>${p.nom}</b> - ${p.type} ${p.pin ? '🔒' : ''}</span>
       <span class="actions">
         <button class="btn-edit" onclick="modifier(${i})" title="Modifier">✏️</button>
         <button class="btn-del" onclick="supprimer(${i})" title="Supprimer">🗑️</button>
@@ -79,39 +111,61 @@ function enregistrer(){
   let nom, data;
   if(isXtream){
     nom = document.getElementById('nomX').value.trim();
-    data = {nom:nom, type:'Xtream', host:document.getElementById('hostX').value, user:document.getElementById('userX').value, pass:document.getElementById('passX').value};
+    data = {nom:nom, type:'Xtream', host:document.getElementById('hostX').value, user:document.getElementById('userX').value, pass:document.getElementById('passX').value, pin:document.getElementById('pinX').value.trim()};
   } else {
     nom = document.getElementById('nomM3U').value.trim();
-    data = {nom:nom, type:'M3U', lien:document.getElementById('lienM3U').value};
+    data = {nom:nom, type:'M3U', lien:document.getElementById('lienM3U').value, pin:document.getElementById('pinM3U').value.trim()};
   }
   if(!nom){ alert('3mer Nom de la Playlist'); return; }
-  if(editIndex>=0){ playlists[editIndex]=data; editIndex=-1; document.getElementById('msg').innerText='Playlist Modifiée !'; }
+  if(editIndex>=0){
+    // Si tu es en modification et tu laisses PIN vide, on garde l'ancien PIN
+    if(!data.pin && playlists[editIndex].pin){ data.pin = playlists[editIndex].pin; }
+    playlists[editIndex]=data; editIndex=-1;
+    document.getElementById('msg').innerText='Playlist Modifiée !';
+  }
   else { playlists.push(data); document.getElementById('msg').innerText='Playlist Enregistrée ! Synchronisée sur la TV'; }
   localStorage.setItem('sw_playlists', JSON.stringify(playlists));
   afficher();
+  // 1. VIDER LE FORM APRES ENREGISTREMENT
+  viderForm();
+  document.getElementById('editInfo').style.display='none';
+  document.getElementById('btnCancel').style.display='none';
+  showTab('m3u');
 }
 function modifier(i){
+  // 2. VERIFIER PIN AVANT MODIFICATION
+  if(!verifierPIN(i)){ return; }
   let p = playlists[i];
   editIndex = i;
+  // On vide d'abord, puis on met que celle-là
+  viderForm();
+  document.getElementById('editInfo').style.display='block';
+  document.getElementById('editName').innerText = p.nom;
+  document.getElementById('btnCancel').style.display='block';
   if(p.type=='Xtream'){
     showTab('xtream');
     document.getElementById('nomX').value=p.nom;
     document.getElementById('hostX').value=p.host||'';
     document.getElementById('userX').value=p.user||'';
     document.getElementById('passX').value=p.pass||'';
+    document.getElementById('pinX').value=p.pin||'';
   } else {
     showTab('m3u');
     document.getElementById('nomM3U').value=p.nom;
     document.getElementById('lienM3U').value=p.lien||'';
+    document.getElementById('pinM3U').value=p.pin||'';
   }
   window.scrollTo(0,0);
   document.getElementById('msg').innerText='Modifiez et cliquez sur Enregistrer';
 }
 function supprimer(i){
+  // 2. VERIFIER PIN AVANT SUPPRESSION
+  if(!verifierPIN(i)){ return; }
   if(confirm('Wach bghiti tمسح had la playlist: '+playlists[i].nom+' ?')){
     playlists.splice(i,1);
     localStorage.setItem('sw_playlists', JSON.stringify(playlists));
     afficher();
+    if(editIndex==i){ annulerModif(); }
   }
 }
 afficher();
