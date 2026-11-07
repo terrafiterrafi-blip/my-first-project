@@ -35,7 +35,6 @@ button{padding:12px;border:none;border-radius:10px;background:#00cfff;color:whit
 <h3>Aperçu de l'Appareil <span style="background:#ffcc00;color:black;padding:2px 8px;border-radius:10px;font-size:11px">TRIAL</span></h3>
 <p>MAC: <b id="showMac"></b></p>
 <p>Expiration Abonnement: <b>14/11/2026</b> | Type d'Accès: <b>Essai Gratuit 7 Jours (Actif)</b></p>
-<p>ID De Déverrouillage: <b>536462</b></p>
 <h3>Mes Playlists Actives</h3>
 <div id="liste"></div>
 </div>
@@ -48,39 +47,34 @@ button{padding:12px;border:none;border-radius:10px;background:#00cfff;color:whit
 </div>
 <div id="formM3U">
 <input id="nomM3U" placeholder="Nom de la Playlist">
-<div class="field"><input id="lienM3U" type="text" placeholder="Lien M3U / http://... - kayban lik mli katkteb"><span class="eye" onclick="toggleEye('lienM3U',this)">🙈</span></div>
-<div class="field"><input id="pinM3U" type="text" inputmode="numeric" maxlength="6" placeholder="Code PIN (6 chiffres) - kayban lik mli katkteb"><span class="eye" onclick="toggleEye('pinM3U',this)">🙈</span></div>
+<div class="field"><input id="lienM3U" type="text" placeholder="Lien M3U / http://..."><span class="eye" onclick="toggleEye('lienM3U',this)">🙈</span></div>
+<div class="field"><input id="pinM3U" type="text" inputmode="numeric" maxlength="6" placeholder="Code PIN (6 chiffres)"><span class="eye" onclick="toggleEye('pinM3U',this)">🙈</span></div>
 </div>
 <div id="formXtream" style="display:none">
 <input id="nomX" placeholder="Nom de la Playlist">
-<div class="field"><input id="hostX" type="text" placeholder="URL / Serveur Host - http://...:8080 - kayban lik"><span class="eye" onclick="toggleEye('hostX',this)">🙈</span></div>
+<div class="field"><input id="hostX" type="text" placeholder="URL / Serveur Host - http://...:8080"><span class="eye" onclick="toggleEye('hostX',this)">🙈</span></div>
 <div style="display:flex;gap:10px">
 <div class="field" style="flex:1"><input id="userX" type="text" placeholder="Nom d'Utilisateur"><span class="eye" onclick="toggleEye('userX',this)">🙈</span></div>
 <div class="field" style="flex:1"><input id="passX" type="text" placeholder="Mot de passe"><span class="eye" onclick="toggleEye('passX',this)">🙈</span></div>
 </div>
-<div class="field"><input id="pinX" type="text" inputmode="numeric" maxlength="6" placeholder="Code PIN (6 chiffres) - kayban lik"><span class="eye" onclick="toggleEye('pinX',this)">🙈</span></div>
+<div class="field"><input id="pinX" type="text" inputmode="numeric" maxlength="6" placeholder="Code PIN (6 chiffres)"><span class="eye" onclick="toggleEye('pinX',this)">🙈</span></div>
 </div>
 <button style="width:100%;margin-top:10px" onclick="enregistrer()">Enregistrer & Synchroniser sur la TV</button>
 <button id="btnCancel" class="btn-cancel" style="display:none" onclick="annulerModif()">Annuler la modification</button>
 <p id="msg" style="color:#00ff88"></p>
-<p style="color:#aaa;font-size:12px">👁️ Mli katkteb, kolchi bayen lik. Mli katdir Enregistrer, kolchi kaytkhba. Ghir smiya li katbqa bayna.</p>
+<p style="color:#aaa;font-size:12px">Mli katkteb, kolchi bayen lik. Mli katdir Enregistrer, kolchi kaytkhba.</p>
 </div>
 </div>
-
-<!-- MODAL PIN - HADA BO7DO LI KAYBQA MOKHBI B •••••• -->
-<div id="pinModal">
-  <div class="modal-box">
-    <h3>🔒 Playlist Protégée</h3>
-    <p>Entrez le Code PIN pour continuer<br><span style="color:#aaa;font-size:12px">Hada bo7do li kaybqa mkhebi ••••••</span></p>
-    <input id="inputPinModal" type="password" inputmode="numeric" maxlength="6" placeholder="••••••" autocomplete="off">
-    <div style="display:flex;gap:10px;margin-top:10px">
-      <button style="flex:1;background:#555" onclick="fermerPin(false)">Annuler</button>
-      <button style="flex:1" onclick="fermerPin(true)">Valider</button>
-    </div>
-    <p id="pinError" style="color:#ff4444;display:none">PIN incorrect !</p>
-  </div>
+<div id="pinModal"><div class="modal-box">
+<h3>🔒 Playlist Protégée</h3>
+<p>Entrez le Code PIN pour continuer</p>
+<input id="inputPinModal" type="password" inputmode="numeric" maxlength="6" placeholder="••••••" autocomplete="off">
+<div style="display:flex;gap:10px;margin-top:10px">
+<button style="flex:1;background:#555" onclick="fermerPin(false)">Annuler</button>
+<button style="flex:1" onclick="fermerPin(true)">Valider</button>
 </div>
-
+<p id="pinError" style="color:#ff4444;display:none">PIN incorrect !</p>
+</div></div>
 <script>
 let playlists = JSON.parse(localStorage.getItem('sw_playlists') || '[]');
 let editIndex = -1;
@@ -99,11 +93,7 @@ function showTab(t){
 }
 function viderForm(){
   ['nomM3U','lienM3U','pinM3U','nomX','hostX','userX','passX','pinX'].forEach(id=>document.getElementById(id).value='');
-  // Mor Enregistrer: rj3hom baynin bach mli y3awd ykteb ychof
-  ['lienM3U','pinM3U','hostX','userX','passX','pinX'].forEach(id=>{
-    document.getElementById(id).type='text';
-  });
-  // Rj3 l3inin l 🙈
+  ['lienM3U','pinM3U','hostX','userX','passX','pinX'].forEach(id=>{ document.getElementById(id).type='text'; });
   document.querySelectorAll('.eye').forEach(e=>e.innerText='🙈');
 }
 function annulerModif(){
@@ -125,8 +115,7 @@ function fermerPin(ok){
   let val = document.getElementById('inputPinModal').value.trim();
   let cb = pinCallback;
   if(!ok){ document.getElementById('pinModal').classList.remove('show'); if(cb) cb(false); return; }
-  let currentPin = window._pinEnCours;
-  if(val !== String(currentPin)){
+  if(val !== String(window._pinEnCours)){
     document.getElementById('pinError').style.display='block';
     document.getElementById('inputPinModal').value='';
     return;
@@ -145,8 +134,8 @@ function afficher(){
     <div class="list-item">
       <span>📺 <b>${p.nom}</b> - ${p.type} ${p.pin ? '🔒' : ''}</span>
       <span class="actions">
-        <button class="btn-edit" onclick="modifier(${i})" title="Modifier">✏️</button>
-        <button class="btn-del" onclick="supprimer(${i})" title="Supprimer">🗑️</button>
+        <button class="btn-edit" onclick="modifier(${i})">✏️</button>
+        <button class="btn-del" onclick="supprimer(${i})">🗑️</button>
       </span>
     </div>`).join('');
 }
@@ -204,7 +193,7 @@ function modifier(i){
 function supprimer(i){
   verifierPIN(i, function(ok){
     if(!ok) return;
-    if(confirm('Wach bghiti tمسح had la playlist: '+playlists[i].nom+' ?')){
+    if(confirm('Wach bghiti tms7 had la playlist: '+playlists[i].nom+' ?')){
       playlists.splice(i,1);
       localStorage.setItem('sw_playlists', JSON.stringify(playlists));
       afficher();
