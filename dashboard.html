@@ -5,110 +5,116 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SW PLAYER - Dashboard</title>
 <style>
-*{box-sizing:border-box;font-family:Arial,sans-serif}
-body{margin:0;background:#0f0f2a;color:white}
-.top{display:flex;justify-content:space-between;align-items:center;padding:15px 30px}
-.logo{font-weight:900;font-size:22px}
-.main{display:flex;gap:20px;padding:0 30px 20px;flex-wrap:wrap}
-.card{background:#1e1e4a;border-radius:15px;padding:20px;flex:1;min-width:320px}
-label{display:block;margin:15px 0 6px;font-size:13px;color:#ccc}
-input{width:100%;padding:12px;border-radius:10px;border:none;background:#121233;color:white;outline:none}
-.row{display:flex;gap:12px}
-.row>div{flex:1}
-.tabs{display:flex;gap:10px}
-.tab{flex:1;padding:12px;border-radius:10px;border:none;cursor:pointer;background:#2a2a5a;color:white;font-weight:700}
-.tab.active{background:#00d4ff;color:#000}
-.tab.xtream.active{background:#2f7bff;color:white}
-.btn{width:100%;margin-top:18px;padding:14px;border:none;border-radius:10px;background:#00d4ff;font-weight:900;cursor:pointer;font-size:15px}
-.badge{background:#ffcc00;color:#000;font-size:11px;padding:4px 8px;border-radius:20px;font-weight:900}
-.small{font-size:11px;color:#aaa;margin-top:8px;line-height:1.5}
-.success{display:none;background:#00c853;padding:12px;border-radius:10px;margin-top:15px;text-align:center;font-weight:700}
+body{margin:0;background:#0f0f2a;color:white;font-family:Arial,sans-serif;padding:20px}
+.top{display:flex;justify-content:space-between;font-weight:bold;margin-bottom:20px}
+.grid{display:flex;gap:20px;flex-wrap:wrap}
+.card{background:#1e1e4a;padding:20px;border-radius:15px;flex:1;min-width:300px}
+input{width:100%;padding:12px;border-radius:10px;border:1px solid #222;background:#05081f;color:white;box-sizing:border-box;margin:5px 0}
+button{padding:12px;border:none;border-radius:10px;background:#00cfff;color:white;font-weight:bold;cursor:pointer}
+.tabs{display:flex;gap:10px;margin-bottom:10px}
+.tabs button{flex:1;background:#2a2a5a}
+.tabs button.active{background:#00cfff}
+.list-item{display:flex;justify-content:space-between;align-items:center;background:#05081f;padding:12px;border-radius:10px;margin:8px 0}
+.actions button{padding:6px 10px;margin-left:5px;font-size:16px}
+.btn-edit{background:#ffaa00}
+.btn-del{background:#ff4444}
 </style>
 </head>
 <body>
-<div class="top">
-  <div class="logo">SW PLAYER</div>
-  <div>Portal Playlist Utilisateur</div>
+<div class="top"><span>SW PLAYER</span><span>Portal Playlist Utilisateur</span></div>
+<div class="grid">
+<div class="card">
+<h3>Aperçu de l'Appareil <span style="background:#ffcc00;color:black;padding:2px 8px;border-radius:10px;font-size:11px">TRIAL</span></h3>
+<p>MAC: <b id="showMac"></b></p>
+<p>Expiration Abonnement: <b>14/11/2026</b> | Type d'Accès: <b>Essai Gratuit 7 Jours (Actif)</b></p>
+<p>ID De Déverrouillage: <b>536462</b></p>
+<h3>Mes Playlists Actives</h3>
+<div id="liste"></div>
 </div>
-
-<div class="main">
-  <div class="card">
-    <h3>Aperçu de l'Appareil <span class="badge">TRIAL</span></h3>
-    <p style="color:#ccc">MAC: <span id="macShow">AA:C3:C8:87:92:29</span></p>
-    <div class="row">
-      <div><label>Expiration Abonnement</label><input value="14/11/2026" readonly></div>
-      <div><label>Type d'Accès</label><input value="Essai Gratuit 7 Jours (Actif)" readonly></div>
-    </div>
-    <label>ID De Déverrouillage</label>
-    <input value="536462" readonly>
-  </div>
-
-  <div class="card">
-    <h3>Ajouter une Playlist</h3>
-    <p style="font-size:13px;color:#ccc">Diffusez chaînes en direct, films et séries directement sur votre lecteur.</p>
-
-    <div class="tabs">
-      <button class="tab active" id="btnM3U" onclick="showM3U()">Lien M3U</button>
-      <button class="tab xtream" id="btnXtream" onclick="showXtream()">⚡ Codes Xtream</button>
-    </div>
-
-    <label>Nom de la Playlist</label>
-    <input id="nom" placeholder="ex: Ma Ligne VIP">
-
-    <!-- M3U -->
-    <div id="boxM3U">
-      <label>Lien M3U/Plus</label>
-      <input id="lienM3U" placeholder="http://serveur.com/get.php?username=...&password=...">
-    </div>
-
-    <!-- XTREAM -->
-    <div id="boxXtream" style="display:none">
-      <label>URL / Serveur Host</label>
-      <input id="host" placeholder="http://serveur-iptv.com:8080">
-      <div class="row">
-        <div><label>Nom d'Utilisateur</label><input id="user" placeholder="Nom d'utilisateur"></div>
-        <div><label>Mot de Passe</label><input id="pass" type="password" placeholder="Mot de passe"></div>
-      </div>
-    </div>
-
-    <label>🔒 Code PIN de Protection (Optionnel - Min 4 chiffres)</label>
-    <input id="pin" type="password" placeholder="Entrez 4+ chiffres pour verrouiller la liste" maxlength="6">
-    <div class="small">Lorsque votre liste est protégée par un code PIN, la liste M3U sera masquée et ne pourra pas être supprimée sans ce code.</div>
-
-    <button class="btn" onclick="save()">💾 Enregistrer & Synchroniser sur la TV</button>
-    <div class="success" id="ok">✅ Playlist Enregistrée ! Synchronisée sur la TV</div>
-  </div>
+<div class="card">
+<h3>Ajouter une Playlist</h3>
+<div class="tabs">
+<button id="btnM3U" class="active" onclick="showTab('m3u')">Lien M3U</button>
+<button id="btnXtream" onclick="showTab('xtream')">Codes Xtream</button>
 </div>
-
-<div class="main"><div class="card"><b>Mes Playlists Actives</b><div id="liste" style="margin-top:10px;color:#ccc">Aucune playlist pour le moment</div></div></div>
-
+<div id="formM3U">
+<input id="nomM3U" placeholder="Nom de la Playlist">
+<input id="lienM3U" placeholder="Lien M3U / http://...">
+<input id="pinM3U" placeholder="Code PIN de Protection (Optional - Min 4 chiffres)">
+</div>
+<div id="formXtream" style="display:none">
+<input id="nomX" placeholder="Nom de la Playlist">
+<input id="hostX" placeholder="URL / Serveur Host - http://...:8080">
+<div style="display:flex;gap:10px"><input id="userX" placeholder="Nom d'Utilisateur"><input id="passX" placeholder="Mot de passe"></div>
+<input id="pinX" placeholder="Code PIN de Protection (Optional - Min 4 chiffres)">
+</div>
+<button style="width:100%;margin-top:10px" onclick="enregistrer()">Enregistrer & Synchroniser sur la TV</button>
+<p id="msg" style="color:#00ff88"></p>
+</div>
+</div>
 <script>
-function showM3U(){
-  document.getElementById('boxM3U').style.display='block';
-  document.getElementById('boxXtream').style.display='none';
-  document.getElementById('btnM3U').classList.add('active');
-  document.getElementById('btnXtream').classList.remove('active');
+let playlists = JSON.parse(localStorage.getItem('sw_playlists') || '[]');
+let editIndex = -1;
+document.getElementById('showMac').innerText = localStorage.getItem('sw_mac') || 'AA:C3:C8:87:92:29';
+function showTab(t){
+  document.getElementById('formM3U').style.display = t=='m3u'?'block':'none';
+  document.getElementById('formXtream').style.display = t=='xtream'?'block':'none';
+  document.getElementById('btnM3U').className = t=='m3u'?'active':'';
+  document.getElementById('btnXtream').className = t=='xtream'?'active':'';
 }
-function showXtream(){
-  document.getElementById('boxM3U').style.display='none';
-  document.getElementById('boxXtream').style.display='block';
-  document.getElementById('btnXtream').classList.add('active');
-  document.getElementById('btnM3U').classList.remove('active');
+function afficher(){
+  let div = document.getElementById('liste');
+  if(playlists.length==0){ div.innerHTML='<p style="color:#aaa">Aucune playlist pour le moment</p>'; return; }
+  div.innerHTML = playlists.map((p,i)=>`
+    <div class="list-item">
+      <span>📺 <b>${p.nom}</b> - ${p.type}</span>
+      <span class="actions">
+        <button class="btn-edit" onclick="modifier(${i})" title="Modifier">✏️</button>
+        <button class="btn-del" onclick="supprimer(${i})" title="Supprimer">🗑️</button>
+      </span>
+    </div>`).join('');
 }
-function save(){
-  let nom=document.getElementById('nom').value;
-  let isXtream=document.getElementById('boxXtream').style.display=='block';
-  let detail = isXtream ? document.getElementById('host').value + ' | ' + document.getElementById('user').value : document.getElementById('lienM3U').value;
-  if(!nom || !detail){ alert('3mer ga3 les champs 3afak'); return; }
-  let list = JSON.parse(localStorage.getItem('playlists')||'[]');
-  list.push({nom:nom, detail:detail, type: isXtream?'Xtream':'M3U'});
-  localStorage.setItem('playlists', JSON.stringify(list));
-  document.getElementById('ok').style.display='block';
-  document.getElementById('liste').innerHTML = list.map(p=> '📺 '+p.nom+' - '+p.type+'<br><small>'+p.detail+'</small>').join('<hr>');
-  setTimeout(()=>{document.getElementById('ok').style.display='none'},3000);
+function enregistrer(){
+  let isXtream = document.getElementById('formXtream').style.display=='block';
+  let nom, data;
+  if(isXtream){
+    nom = document.getElementById('nomX').value.trim();
+    data = {nom:nom, type:'Xtream', host:document.getElementById('hostX').value, user:document.getElementById('userX').value, pass:document.getElementById('passX').value};
+  } else {
+    nom = document.getElementById('nomM3U').value.trim();
+    data = {nom:nom, type:'M3U', lien:document.getElementById('lienM3U').value};
+  }
+  if(!nom){ alert('3mer Nom de la Playlist'); return; }
+  if(editIndex>=0){ playlists[editIndex]=data; editIndex=-1; document.getElementById('msg').innerText='Playlist Modifiée !'; }
+  else { playlists.push(data); document.getElementById('msg').innerText='Playlist Enregistrée ! Synchronisée sur la TV'; }
+  localStorage.setItem('sw_playlists', JSON.stringify(playlists));
+  afficher();
 }
-let saved = JSON.parse(localStorage.getItem('playlists')||'[]');
-if(saved.length){ document.getElementById('liste').innerHTML = saved.map(p=> '📺 '+p.nom+' - '+p.type).join('<br>'); }
+function modifier(i){
+  let p = playlists[i];
+  editIndex = i;
+  if(p.type=='Xtream'){
+    showTab('xtream');
+    document.getElementById('nomX').value=p.nom;
+    document.getElementById('hostX').value=p.host||'';
+    document.getElementById('userX').value=p.user||'';
+    document.getElementById('passX').value=p.pass||'';
+  } else {
+    showTab('m3u');
+    document.getElementById('nomM3U').value=p.nom;
+    document.getElementById('lienM3U').value=p.lien||'';
+  }
+  window.scrollTo(0,0);
+  document.getElementById('msg').innerText='Modifiez et cliquez sur Enregistrer';
+}
+function supprimer(i){
+  if(confirm('Wach bghiti tمسح had la playlist: '+playlists[i].nom+' ?')){
+    playlists.splice(i,1);
+    localStorage.setItem('sw_playlists', JSON.stringify(playlists));
+    afficher();
+  }
+}
+afficher();
 </script>
 </body>
 </html>
