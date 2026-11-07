@@ -3,210 +3,40 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TERR PLAYER - Dashboard</title>
+<title>TERR PLAYER - Connexion</title>
 <style>
-body{margin:0;background:#0f0f2a;color:white;font-family:Arial,sans-serif;padding:20px}
-.top{display:flex;justify-content:space-between;font-weight:bold;margin-bottom:20px}
-.grid{display:flex;gap:20px;flex-wrap:wrap}
-.card{background:#1e1e4a;padding:20px;border-radius:15px;flex:1;min-width:300px}
-input{width:100%;padding:12px;border-radius:10px;border:1px solid #222;background:#05081f;color:white;box-sizing:border-box;margin:5px 0}
-button{padding:12px;border:none;border-radius:10px;background:#00cfff;color:white;font-weight:bold;cursor:pointer}
-.tabs{display:flex;gap:10px;margin-bottom:10px}
-.tabs button{flex:1;background:#2a2a5a}
-.tabs button.active{background:#00cfff}
-.list-item{display:flex;justify-content:space-between;align-items:center;background:#05081f;padding:12px;border-radius:10px;margin:8px 0}
-.actions button{padding:6px 10px;margin-left:5px;font-size:16px}
-.btn-edit{background:#ffaa00}
-.btn-del{background:#ff4444}
-.btn-cancel{background:#555;margin-top:8px;width:100%}
-.field{position:relative}
-.field input{padding-right:45px}
-.eye{position:absolute;right:8px;top:50%;transform:translateY(-50%);background:#2a2a5a;padding:6px 10px;border-radius:8px;cursor:pointer;font-size:16px}
-.exemple{background:#05081f;padding:12px;border-radius:10px;border:1px dashed #444;color:#aaa;font-size:13px;margin-top:10px}
-#pinModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:999;align-items:center;justify-content:center}
-#pinModal.show{display:flex}
-.modal-box{background:#1e1e4a;padding:25px;border-radius:15px;width:90%;max-width:350px;text-align:center}
-.modal-box input{text-align:center;font-size:22px;letter-spacing:8px}
+body{margin:0;background:#0f0f2a;color:white;font-family:Arial,sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh}
+.box{background:#1e1e4a;padding:30px;border-radius:15px;width:90%;max-width:380px;text-align:center}
+input{width:100%;padding:13px;border-radius:10px;border:1px solid #222;background:#05081f;color:white;box-sizing:border-box;margin:8px 0;font-size:15px}
+button{width:100%;padding:13px;border:none;border-radius:10px;background:#00cfff;color:white;font-weight:bold;cursor:pointer;font-size:15px}
+small{color:#aaa;font-size:12px}
 </style>
 </head>
 <body>
-<div class="top"><span>TERR PLAYER</span><span>Portal Playlist Utilisateur</span></div>
-<div class="grid">
-<div class="card">
-<h3>Aperçu de l'Appareil <span style="background:#ffcc00;color:black;padding:2px 8px;border-radius:10px;font-size:11px">TRIAL</span></h3>
-<p>MAC: <b id="showMac"></b></p>
-<p>Expiration Abonnement: <b>14/11/2026</b> | Type d'Accès: <b>Essai Gratuit 7 Jours (Actif)</b></p>
-<h3>Mes Playlists Actives (<span id="nbPlay">0</span>)</h3>
-<div id="liste"></div>
-<div class="exemple">💡 <b>Exemple kifach tbedda:</b><br>1. 3mer Smiya - Ex: Ma Chaine<br>2. 3mer Lien M3U wla Codes Xtream<br>3. Wrek Enregistrer - Ghadi tban lik hna</div>
+<div class="box">
+<h2>📺 Connectez Votre Appareil</h2>
+<p style="color:#aaa;font-size:13px">Entrez l'adresse MAC et le clé affichés sur votre TV pour synchroniser vos playlists</p>
+<label style="float:left;font-size:13px">Adresse MAC de l'Appareil</label>
+<input id="mac" placeholder="AA:C3:C8:87:92:29" autocomplete="off">
+<label style="float:left;font-size:13px">Clé de l'Appareil</label>
+<input id="cle" placeholder="Ex: 536462" autocomplete="new-password" inputmode="numeric">
+<button onclick="connecter()">Se Connecter & Gérer les Playlists</button>
+<p><small>TERR PLAYER © 2026. Pour le renouvellement de l'abonnement, veuillez contacter le revendeur agréé.</small></p>
+<p id="err" style="color:#ff4444"></p>
 </div>
-<div class="card">
-<h3>Ajouter une Playlist</h3>
-<p id="editInfo" style="display:none;background:#ffaa00;color:black;padding:10px;border-radius:10px;font-weight:bold">Modification de: <span id="editName"></span></p>
-<div class="tabs">
-<button id="btnM3U" class="active" onclick="showTab('m3u')">Lien M3U</button>
-<button id="btnXtream" onclick="showTab('xtream')">Codes Xtream</button>
-</div>
-<div id="formM3U">
-<input id="nomM3U" placeholder="Nom de la Playlist - Ex: Ma Chaine" autocomplete="off">
-<div class="field"><input id="lienM3U" type="text" placeholder="Lien M3U / http://..." autocomplete="off"><span class="eye" onclick="toggleEye('lienM3U',this)">🙈</span></div>
-<div class="field"><input id="pinM3U" type="text" inputmode="numeric" maxlength="6" placeholder="Code PIN (6 chiffres) - Optionnel" autocomplete="off"><span class="eye" onclick="toggleEye('pinM3U',this)">🙈</span></div>
-</div>
-<div id="formXtream" style="display:none">
-<input id="nomX" placeholder="Nom de la Playlist - Ex: Ma Chaine" autocomplete="off">
-<div class="field"><input id="hostX" type="text" placeholder="URL / Serveur Host - http://...:8080" autocomplete="off"><span class="eye" onclick="toggleEye('hostX',this)">🙈</span></div>
-<div style="display:flex;gap:10px">
-<div class="field" style="flex:1"><input id="userX" type="text" placeholder="Nom d'Utilisateur" autocomplete="off"><span class="eye" onclick="toggleEye('userX',this)">🙈</span></div>
-<div class="field" style="flex:1"><input id="passX" type="text" placeholder="Mot de passe" autocomplete="off"><span class="eye" onclick="toggleEye('passX',this)">🙈</span></div>
-</div>
-<div class="field"><input id="pinX" type="text" inputmode="numeric" maxlength="6" placeholder="Code PIN (6 chiffres) - Optionnel" autocomplete="off"><span class="eye" onclick="toggleEye('pinX',this)">🙈</span></div>
-</div>
-<button style="width:100%;margin-top:10px" onclick="enregistrer()">Enregistrer & Synchroniser sur la TV</button>
-<button id="btnCancel" class="btn-cancel" style="display:none" onclick="annulerModif()">Annuler la modification</button>
-<p id="msg" style="color:#00ff88"></p>
-</div>
-</div>
-<div id="pinModal"><div class="modal-box">
-<h3>🔒 Playlist Protégée</h3>
-<p>Entrez le Code PIN pour continuer</p>
-<input id="inputPinModal" type="password" inputmode="numeric" maxlength="6" placeholder="••••••" autocomplete="off">
-<div style="display:flex;gap:10px;margin-top:10px">
-<button style="flex:1;background:#555" onclick="fermerPin(false)">Annuler</button>
-<button style="flex:1" onclick="fermerPin(true)">Valider</button>
-</div>
-<p id="pinError" style="color:#ff4444;display:none">PIN incorrect !</p>
-</div></div>
 <script>
-let macActuel = localStorage.getItem('sw_mac') || 'NO-MAC';
-document.getElementById('showMac').innerText = macActuel;
-// HNA LMOCHKIL KAN - DABA KOL MAC 3ANDO PLAYLISTS DYALO BO7DO
-let cleStockage = 'sw_playlists_' + macActuel;
-let playlists = JSON.parse(localStorage.getItem(cleStockage) || '[]');
-let editIndex = -1;
-let pinCallback = null;
-function toggleEye(id, el){
-  let inp = document.getElementById(id);
-  if(inp.type==='text'){ inp.type='password'; el.innerText='👁️'; }
-  else { inp.type='text'; el.innerText='🙈'; }
+window.onload = function(){
+  document.getElementById('mac').value = '';
+  document.getElementById('cle').value = '';
+};
+function connecter(){
+  let mac = document.getElementById('mac').value.trim().toUpperCase();
+  let cle = document.getElementById('cle').value.trim();
+  if(!mac || !cle){ document.getElementById('err').innerText='3mer MAC w Clé 3afak'; return; }
+  localStorage.setItem('sw_mac', mac);
+  localStorage.setItem('sw_cle', cle);
+  window.location.href = 'dashboard.html?mac=' + encodeURIComponent(mac);
 }
-function showTab(t){
-  document.getElementById('formM3U').style.display = t=='m3u'?'block':'none';
-  document.getElementById('formXtream').style.display = t=='xtream'?'block':'none';
-  document.getElementById('btnM3U').className = t=='m3u'?'active':'';
-  document.getElementById('btnXtream').className = t=='xtream'?'active':'';
-}
-function viderForm(){
-  ['nomM3U','lienM3U','pinM3U','nomX','hostX','userX','passX','pinX'].forEach(id=>document.getElementById(id).value='');
-  ['lienM3U','pinM3U','hostX','userX','passX','pinX'].forEach(id=>{ document.getElementById(id).type='text'; });
-  document.querySelectorAll('.eye').forEach(e=>e.innerText='🙈');
-}
-function annulerModif(){
-  editIndex=-1; viderForm();
-  document.getElementById('editInfo').style.display='none';
-  document.getElementById('btnCancel').style.display='none';
-  document.getElementById('msg').innerText='';
-  showTab('m3u');
-}
-function demanderPIN(p, callback){
-  if(!p.pin || p.pin==''){ callback(true); return; }
-  pinCallback = callback;
-  document.getElementById('pinError').style.display='none';
-  document.getElementById('inputPinModal').value='';
-  document.getElementById('pinModal').classList.add('show');
-  setTimeout(()=>document.getElementById('inputPinModal').focus(),100);
-}
-function fermerPin(ok){
-  let val = document.getElementById('inputPinModal').value.trim();
-  let cb = pinCallback;
-  if(!ok){ document.getElementById('pinModal').classList.remove('show'); if(cb) cb(false); return; }
-  if(val !== String(window._pinEnCours)){
-    document.getElementById('pinError').style.display='block';
-    document.getElementById('inputPinModal').value='';
-    return;
-  }
-  document.getElementById('pinModal').classList.remove('show');
-  if(cb) cb(true);
-}
-function verifierPIN(i, callback){
-  window._pinEnCours = playlists[i].pin;
-  demanderPIN(playlists[i], callback);
-}
-function afficher(){
-  document.getElementById('nbPlay').innerText = playlists.length;
-  let div = document.getElementById('liste');
-  if(playlists.length==0){ div.innerHTML='<p style="color:#aaa">Aucune playlist pour le moment - 0 playlist<br>Zid loula dyalek mn limen 👉</p>'; return; }
-  div.innerHTML = playlists.map((p,i)=>`
-    <div class="list-item">
-      <span>📺 <b>${p.nom}</b> - ${p.type} ${p.pin ? '🔒' : ''}</span>
-      <span class="actions">
-        <button class="btn-edit" onclick="modifier(${i})">✏️</button>
-        <button class="btn-del" onclick="supprimer(${i})">🗑️</button>
-      </span>
-    </div>`).join('');
-}
-function enregistrer(){
-  let isXtream = document.getElementById('formXtream').style.display=='block';
-  let nom, data;
-  if(isXtream){
-    nom = document.getElementById('nomX').value.trim();
-    data = {nom:nom, type:'Xtream', host:document.getElementById('hostX').value, user:document.getElementById('userX').value, pass:document.getElementById('passX').value, pin:document.getElementById('pinX').value.trim()};
-  } else {
-    nom = document.getElementById('nomM3U').value.trim();
-    data = {nom:nom, type:'M3U', lien:document.getElementById('lienM3U').value, pin:document.getElementById('pinM3U').value.trim()};
-  }
-  if(!nom){ alert('3mer Nom de la Playlist'); return; }
-  if(data.pin && data.pin.length < 4){ alert('PIN khassou ykoun 4 hta 6 chiffres'); return; }
-  if(editIndex>=0){
-    if(!data.pin && playlists[editIndex].pin){ data.pin = playlists[editIndex].pin; }
-    playlists[editIndex]=data; editIndex=-1;
-    document.getElementById('msg').innerText='Playlist Modifiée !';
-  }
-  else { playlists.push(data); document.getElementById('msg').innerText='Playlist Enregistrée !'; }
-  localStorage.setItem(cleStockage, JSON.stringify(playlists));
-  afficher();
-  viderForm();
-  document.getElementById('editInfo').style.display='none';
-  document.getElementById('btnCancel').style.display='none';
-  showTab('m3u');
-}
-function modifier(i){
-  verifierPIN(i, function(ok){
-    if(!ok) return;
-    let p = playlists[i];
-    editIndex = i;
-    viderForm();
-    document.getElementById('editInfo').style.display='block';
-    document.getElementById('editName').innerText = p.nom;
-    document.getElementById('btnCancel').style.display='block';
-    if(p.type=='Xtream'){
-      showTab('xtream');
-      document.getElementById('nomX').value=p.nom;
-      document.getElementById('hostX').value=p.host||'';
-      document.getElementById('userX').value=p.user||'';
-      document.getElementById('passX').value=p.pass||'';
-      document.getElementById('pinX').value=p.pin||'';
-    } else {
-      showTab('m3u');
-      document.getElementById('nomM3U').value=p.nom;
-      document.getElementById('lienM3U').value=p.lien||'';
-      document.getElementById('pinM3U').value=p.pin||'';
-    }
-    window.scrollTo(0,0);
-    document.getElementById('msg').innerText='Modifiez et cliquez sur Enregistrer';
-  });
-}
-function supprimer(i){
-  verifierPIN(i, function(ok){
-    if(!ok) return;
-    if(confirm('Wach bghiti tms7 had la playlist: '+playlists[i].nom+' ?')){
-      playlists.splice(i,1);
-      localStorage.setItem(cleStockage, JSON.stringify(playlists));
-      afficher();
-      if(editIndex==i){ annulerModif(); }
-    }
-  });
-}
-afficher();
 </script>
 </body>
 </html>
