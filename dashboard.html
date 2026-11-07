@@ -38,7 +38,6 @@ button{padding:12px;border:none;border-radius:10px;background:#00cfff;color:whit
 <p>Expiration Abonnement: <b>14/11/2026</b> | Type d'Accès: <b>Essai Gratuit 7 Jours (Actif)</b></p>
 <h3>Mes Playlists Actives (<span id="nbPlay">0</span>)</h3>
 <div id="liste"></div>
-<div class="exemple">💡 <b>Exemple kifach tbedda:</b><br>1. 3mer Smiya - Ex: Ma Chaine<br>2. 3mer Lien M3U wla Codes Xtream<br>3. Wrek Enregistrer - Ghadi tban lik hna</div>
 </div>
 <div class="card">
 <h3>Ajouter une Playlist</h3>
@@ -133,7 +132,7 @@ function verifierPIN(i, callback){
 function afficher(){
   document.getElementById('nbPlay').innerText = playlists.length;
   let div = document.getElementById('liste');
-  if(playlists.length==0){ div.innerHTML='<p style="color:#aaa">Aucune playlist pour le moment - 0 playlist<br>Zid loula dyalek mn limen 👉</p>'; return; }
+  if(playlists.length==0){ div.innerHTML='<p style="color:#aaa">Aucune playlist pour le moment - 0 playlist</p>'; return; }
   div.innerHTML = playlists.map((p,i)=>`
     <div class="list-item">
       <span>📺 <b>${p.nom}</b> - ${p.type} ${p.pin ? '🔒' : ''}</span>
