@@ -25,6 +25,7 @@ small{color:#aaa;font-size:12px}
 <p id="err" style="color:#ff4444"></p>
 </div>
 <script>
+  document.getElementById('mac').addEventListener('input', function(e){ let v = e.target.value.replace(/[^0-9a-fA-F]/g,'').toUpperCase().slice(0,12); let f = v.match(/.{1,2}/g); e.target.value = f ? f.join(':') : ''; });
 function connecter(){
   let mac = document.getElementById('mac').value.trim().toUpperCase();
   let cle = document.getElementById('cle').value.trim();
