@@ -3,170 +3,108 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ADIL CINEMA - Portail Playlist</title>
+<title>ADIL CINEMA - Portail</title>
 <style>
 *{box-sizing:border-box;font-family:Arial,sans-serif}
-body{margin:0;background:#0a1030;color:#fff;padding:15px}
-.top{display:flex;justify-content:space-between;align-items:center;max-width:1000px;margin:auto}
-.logo{font-size:22px;font-weight:900} .logo span{color:#00e5ff}
-.btn{border:0;padding:10px 16px;border-radius:10px;font-weight:700;cursor:pointer}
-.btn-blue{background:#1e3cff;color:#fff} .btn-green{background:#00d9b5;color:#fff;width:100%;padding:14px;font-size:16px}
-.btn-red{background:#ff4d6d;color:#fff} .btn-gray{background:#2a3566;color:#fff}
-.card{background:#131b4a;border-radius:16px;padding:18px;margin-top:15px}
-.wrap{max-width:1000px;margin:auto;display:grid;grid-template-columns:1fr 1.2fr;gap:15px}
-input,select{width:100%;padding:13px;margin:8px 0 14px;border-radius:10px;border:1px solid #2a3566;background:#0d1440;color:#fff;outline:none}
-label{font-size:13px;color:#aab}
-.tabs{display:flex;gap:8px} .tabs button{flex:1;padding:11px;border-radius:10px;border:0;cursor:pointer;background:#1c265e;color:#fff;font-weight:700}
-.tabs button.active{background:#1e3cff}
-.hidden{display:none!important}
-.playlist{background:#0d1440;border-radius:12px;padding:12px;display:flex;justify-content:space-between;align-items:center;margin-top:10px}
-.badge{background:#ffaa00;color:#000;font-size:11px;padding:3px 8px;border-radius:20px;font-weight:700}
-.login{max-width:420px;margin:60px auto;text-align:center}
-.login .card{text-align:left}
-@media(max-width:700px){.wrap{grid-template-columns:1fr}}
+body{margin:0;background:#0a0a5c;color:white;min-height:100vh}
+header{display:flex;justify-content:space-between;align-items:center;padding:15px 20px}
+.logo{font-size:22px;font-weight:900;color:#00e5ff}
+.badge{background:#7b2ff7;padding:8px 14px;border-radius:20px;font-size:13px}
+.card{background:#1a1ac2;max-width:480px;margin:30px auto;padding:25px;border-radius:20px;text-align:center}
+h1{font-size:24px;margin:0}
+p{opacity:.8;font-size:14px}
+label{display:block;text-align:left;margin:18px 0 6px;font-size:14px}
+input{width:100%;padding:14px;border-radius:10px;border:1px solid #5555ff;background:#0a0a8a;color:white;font-size:17px;letter-spacing:1px;outline:none;text-transform:uppercase}
+input:focus{border-color:#00e5ff}
+button{width:100%;padding:15px;border:none;border-radius:10px;background:#00e5ff;color:#001; font-weight:800;font-size:16px;margin-top:20px;cursor:pointer}
+button:active{transform:scale(.98)}
+.small{font-size:12px;margin-top:10px;opacity:.7}
+#dashboard{display:none;max-width:600px;margin:20px auto;padding:20px}
+.playlist{background:#1a1ac2;padding:15px;border-radius:15px;margin-top:15px}
+.row{display:flex;justify-content:space-between;align-items:center;background:#0a0a8a;padding:12px;border-radius:10px;margin:8px 0}
+.row button{width:auto;padding:8px 12px;margin:0;background:#ff4444;color:white;font-size:12px}
+.add{display:flex;gap:8px;margin-top:15px}
+.add input{flex:1}
+.add button{width:auto;margin:0;padding:12px 18px}
+.error{color:#ff9a9a;font-size:13px;margin-top:10px;display:none}
 </style>
 </head>
 <body>
+<header><div class="logo">ADIL CINEMA</div><div class="badge">Portail Playlist Utilisateur</div></header>
 
-<div class="top">
-  <div class="logo">ADIL <span>CINEMA</span></div>
-  <div><button class="btn btn-blue" onclick="location.reload()">Portail Playlist Utilisateur</button></div>
+<div class="card" id="loginBox">
+<h1>Connectez Votre Appareil</h1>
+<p>Entrez MAC et Clé pour gérer vos playlists</p>
+<label>Adresse MAC de l'Appareil</label>
+<input id="mac" placeholder="A4:C3:C8:87:92:29" maxlength="17" autocomplete="off">
+<label>Clé de l'Appareil</label>
+<input id="key" placeholder="535482" inputmode="numeric">
+<button onclick="login()">Se Connecter & Gérer les Playlists</button>
+<div class="error" id="err">MAC ou Clé incorrect, 3awd jereb</div>
+<div class="small">Astuce pour test: هادو يبقاو لي MAC و Clé ديالك</div>
 </div>
 
-<!-- LOGIN -->
-<div id="loginPage" class="login">
-  <h2>Connectez Votre Appareil</h2>
-  <p style="color:#aab">Entrez MAC et Clé pour gérer vos playlists</p>
-  <div class="card">
-    <label>Adresse MAC de l'Appareil</label>
-    <input id="macInput" placeholder="Ex: A4:C3:C8:87:92:29">
-    <label>Clé de l'Appareil</label>
-    <input id="keyInput" placeholder="Ex: 535482">
-    <button class="btn btn-green" onclick="login()">Se Connecter & Gérer les Playlists</button>
-    <p style="font-size:12px;color:#aab;text-align:center">Astuce pour test: دخل أي MAC و أي Clé و غادي يدخلك</p>
-  </div>
+<div id="dashboard">
+<h2 style="text-align:center">Bienvenue 👋</h2>
+<p style="text-align:center" id="infoMac"></p>
+<div class="playlist">
+<h3>📺 Playlist dyalek</h3>
+<div id="list"></div>
+<div class="add">
+<input id="newChan" placeholder="Smiya dyal chaine, ex: beIN Sports">
+<button onclick="addChan()">+ Zid</button>
 </div>
-
-<!-- DASHBOARD -->
-<div id="dashPage" class="hidden">
-  <div class="wrap">
-    <div class="card">
-      <h3 style="margin:0">Aperçu de l'Appareil <span class="badge" style="float:right">TRIAL</span></h3>
-      <p style="color:#aab;font-size:13px">MAC: <b id="showMac"></b></p>
-      <div style="display:flex;gap:10px">
-        <div style="flex:1;background:#0d1440;padding:12px;border-radius:12px"><small style="color:#aab">Expiration Abonnement</small><br><b>14/11/2026</b></div>
-        <div style="flex:1;background:#0d1440;padding:12px;border-radius:12px"><small style="color:#aab">Type d'Accès</small><br><b>Essai Gratuit 7 Jours (Actif)</b></div>
-      </div>
-      <br><button class="btn btn-gray" onclick="logout()">Déconnecter l'Appareil</button>
-    </div>
-
-    <div class="card">
-      <h3 style="margin:0">Ajouter une Playlist</h3>
-      <p style="color:#aab;font-size:13px">Diffusez chaînes en direct, films et séries directement sur votre lecteur.</p>
-      <div class="tabs">
-        <button id="tabM3U" class="active" onclick="setTab('m3u')">🔗 Lien M3U RECOMMANDÉ</button>
-        <button id="tabXtream" onclick="setTab('xtream')">⚡ Codes Xtream</button>
-      </div>
-      <div id="formM3U">
-        <label>Nom de la Playlist</label>
-        <input id="pName" placeholder="ex: Ma Ligne VIP">
-        <label>Lien M3U Plus</label>
-        <input id="pUrl" placeholder="http://serveur.com/get.php?username=...&type=m3u_plus">
-      </div>
-      <div id="formXtream" class="hidden">
-        <label>Nom de la Playlist</label>
-        <input id="xName" placeholder="ex: Ma Ligne VIP">
-        <label>Serveur / Host</label>
-        <input id="xHost" placeholder="http://serveur.com:8080">
-        <label>Username</label>
-        <input id="xUser" placeholder="Username">
-        <label>Password</label>
-        <input id="xPass" placeholder="Password">
-      </div>
-      <label>🔒 Code PIN de Protection (Optionnel - Min 4 chiffres)</label>
-      <input id="pPin" placeholder="Entrez 4+ chiffres pour verrouiller la liste">
-      <button class="btn btn-green" onclick="savePlaylist()">Enregistrer & Synchroniser sur la TV</button>
-    </div>
-  </div>
-
-  <div class="wrap" style="grid-template-columns:1fr">
-    <div class="card">
-      <h3>Mes Playlists Actives <span style="float:right;font-size:13px;color:#aab" id="countLabel"></span></h3>
-      <div id="listBox"></div>
-      <p id="emptyMsg" style="color:#aab">Aucune playlist pour le moment. Ajoutez votre première playlist ci-dessus.</p>
-    </div>
-  </div>
+<button onclick="logout()" style="background:#444;color:white">Déconnexion</button>
+</div>
 </div>
 
 <script>
-let tab='m3u';
-let playlists = JSON.parse(localStorage.getItem('adil_playlists')||'[]');
-function setTab(t){
-  tab=t;
-  document.getElementById('tabM3U').classList.toggle('active',t=='m3u');
-  document.getElementById('tabXtream').classList.toggle('active',t=='xtream');
-  document.getElementById('formM3U').classList.toggle('hidden',t!='m3u');
-  document.getElementById('formXtream').classList.toggle('hidden',t!='xtream');
+// 1. MAC AUTOMATIQUE - kaydir : bouhdo
+const macInput = document.getElementById('mac');
+macInput.addEventListener('input', function(){
+  let v = this.value.toUpperCase().replace(/[^A-F0-9]/g,'').slice(0,12);
+  let parts = [];
+  for(let i=0;i<v.length;i+=2){ parts.push(v.slice(i,i+2)); }
+  this.value = parts.join(':');
+});
+
+// 2. Clé ghir ar9am
+document.getElementById('key').addEventListener('input', function(){
+  this.value = this.value.replace(/[^0-9]/g,'').slice(0,8);
+});
+
+let channels = ["beIN Sports 1","MBC 2","2M","Arryadia","Netflix - Films"];
+
+function render(){
+  document.getElementById('list').innerHTML = channels.map((c,i)=>`
+    <div class="row"><span>${c}</span><button onclick="delChan(${i})">Supprimer</button></div>
+  `).join('');
 }
 function login(){
-  let mac=document.getElementById('macInput').value.trim();
-  let key=document.getElementById('keyInput').value.trim();
-  if(!mac||!key){alert('عمر MAC و Clé عافاك');return;}
-  localStorage.setItem('adil_mac',mac);
-  localStorage.setItem('adil_key',key);
-  showDash();
-}
-function logout(){localStorage.removeItem('adil_mac');location.reload();}
-function showDash(){
-  let mac=localStorage.getItem('adil_mac');
-  if(!mac) return;
-  document.getElementById('loginPage').classList.add('hidden');
-  document.getElementById('dashPage').classList.remove('hidden');
-  document.getElementById('showMac').textContent=mac;
-  render();
-}
-function savePlaylist(){
-  let name,pUrl,pin=document.getElementById('pPin').value;
-  if(tab=='m3u'){
-    name=document.getElementById('pName').value.trim();
-    pUrl=document.getElementById('pUrl').value.trim();
-  } else {
-    name=document.getElementById('xName').value.trim();
-    let h=document.getElementById('xHost').value.trim();
-    let u=document.getElementById('xUser').value.trim();
-    let p=document.getElementById('xPass').value.trim();
-    pUrl=h+' | '+u+' | '+p;
+  let mac = macInput.value.trim();
+  let key = document.getElementById('key').value.trim();
+  if(mac.length !== 17 || key.length < 4){
+    document.getElementById('err').style.display='block';
+    return;
   }
-  if(!name||!pUrl){alert('عمر Nom و Lien عافاك');return;}
-  if(pin && pin.length<4){alert('PIN خاصو يكون 4+ أرقام');return;}
-  playlists.push({name,url:pUrl,pin,type:tab});
-  localStorage.setItem('adil_playlists',JSON.stringify(playlists));
-  alert('تم! Playlist تسجلات و غادي تبان فالتلفازة');
+  document.getElementById('err').style.display='none';
+  document.getElementById('loginBox').style.display='none';
+  document.getElementById('dashboard').style.display='block';
+  document.getElementById('infoMac').innerText = "MAC: " + mac + " | Clé: " + key;
   render();
 }
-function render(){
-  let box=document.getElementById('listBox');
-  box.innerHTML='';
-  document.getElementById('countLabel').textContent=playlists.length+' playlist(s)';
-  document.getElementById('emptyMsg').style.display=playlists.length?'none':'block';
-  playlists.forEach((pl,i)=>{
-    let d=document.createElement('div');d.className='playlist';
-    d.innerHTML=<div><b>${pl.name}</b> <span class="badge">${pl.type=='m3u'?'LIEN M3U':'XTREAM'}</span> ${pl.pin?'<span class="badge" style="background:#ff4d6d;color:#fff">PROTÉGÉ PAR PIN</span>':''}<br><small style="color:#aab">URL: ••••••••••••</small></div><div><button class="btn btn-gray" onclick="editPl(${i})">Modifier</button> <button class="btn btn-red" onclick="delPl(${i})">Supprimer</button></div>;
-    box.appendChild(d);
-  });
+function addChan(){
+  let v = document.getElementById('newChan').value.trim();
+  if(!v) return;
+  channels.push(v);
+  document.getElementById('newChan').value='';
+  render();
 }
-function delPl(i){
-  let pl=playlists[i];
-  if(pl.pin){let c=prompt('هاد الليست محمية، دخل PIN باش تمسحها:');if(c!==pl.pin){alert('PIN غالط');return;}}
-  if(!confirm('واش متأكد بغيتي تمسح '+pl.name+' ?')) return;
-  playlists.splice(i,1);localStorage.setItem('adil_playlists',JSON.stringify(playlists));render();
+function delChan(i){ channels.splice(i,1); render(); }
+function logout(){
+  document.getElementById('dashboard').style.display='none';
+  document.getElementById('loginBox').style.display='block';
 }
-function editPl(i){
-  let pl=playlists[i];
-  let n=prompt('Nom جديد:',pl.name); if(n) pl.name=n;
-  localStorage.setItem('adil_playlists',JSON.stringify(playlists));render();
-}
-showDash();
 </script>
 </body>
 </html>
