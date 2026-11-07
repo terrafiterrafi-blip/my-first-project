@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SW PLAYER - Portal</title>
+<title>TERR PLAYER - Portal</title>
 <style>
 body{margin:0;background:#0f0f2a;color:white;font-family:Arial,sans-serif;display:flex;justify-content:center;align-items:center;min-height:100vh}
 .box{background:#1e1e4a;padding:30px;border-radius:20px;width:90%;max-width:420px;text-align:center}
@@ -16,7 +16,7 @@ button{width:100%;padding:14px;border:none;border-radius:10px;background:#00cfff
 </style>
 </head>
 <body>
-<div class="top"><span>SW PLAYER</span><span>Portal Playlist Utilisateur</span></div>
+<div class="top"><span>TERR PLAYER</span><span>Portal Playlist Utilisateur</span></div>
 <div class="box">
 <div style="font-size:30px">📺</div>
 <h2>Connectez Votre Appareil</h2>
@@ -26,12 +26,11 @@ button{width:100%;padding:14px;border:none;border-radius:10px;background:#00cfff
 <label>Clé de l'Appareil</label>
 <input id="cle" type="text" placeholder="536462" value="536462">
 <button onclick="connecter()">>> Se Connecter & Gérer les Playlists</button>
-<p style="margin-top:15px">SW PLAYER © 2026. Pour le renouvellement et l'activation, contactez un revendeur agréé.</p>
+<p style="margin-top:15px">TERR PLAYER © 2026. Pour le renouvellement et l'activation, contactez un revendeur agréé.</p>
 </div>
 <script>
 let macInput = document.getElementById('mac');
 macInput.addEventListener('input', function(){
-  // دابا كيقبل أي حرف من A حتى Z و أي رقم
   let v = this.value.replace(/[^A-Za-z0-9]/g, '').toUpperCase();
   let out = '';
   for(let i=0; i<v.length; i++){
