@@ -1,37 +1,52 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SW PLAYER - Portal</title>
 <style>
-body{margin:0;background:#05081f;color:white;font-family:Arial;display:flex;justify-content:center;align-items:center;min-height:100vh}
-.box{background:#0d1330;padding:30px;border-radius:20px;width:90%;max-width:420px;text-align:center}
-h2{margin:10px 0 5px} p{color:#aaa;font-size:13px}
+body{margin:0;background:#0f0f2a;color:white;font-family:Arial,sans-serif;display:flex;justify-content:center;align-items:center;min-height:100vh}
+.box{background:#1e1e4a;padding:30px;border-radius:20px;width:90%;max-width:420px;text-align:center}
+h2{margin:10px 0 5px}
+p{color:#aaa;font-size:13px}
 label{display:block;text-align:left;margin:15px 0 5px;font-size:13px}
-input{width:100%;padding:14px;border-radius:10px;border:1px solid #222;background:#05081f;color:white;box-sizing:border-box;font-size:16px;letter-spacing:1px}
-input::placeholder{color:#555}
-button{width:100%;padding:14px;border:none;border-radius:10px;background:#00cfff;color:white;font-weight:bold;font-size:15px;margin-top:20px;cursor:pointer}
+input{width:100%;padding:14px;border-radius:10px;border:1px solid #222;background:#05081f;color:white;box-sizing:border-box;font-size:16px}
+button{width:100%;padding:14px;border:none;border-radius:10px;background:#00cfff;color:white;font-weight:bold;font-size:15px;cursor:pointer;margin-top:20px}
 .top{position:fixed;top:0;left:0;right:0;padding:15px 20px;display:flex;justify-content:space-between;font-weight:bold}
-</style></head>
+</style>
+</head>
 <body>
 <div class="top"><span>SW PLAYER</span><span>Portal Playlist Utilisateur</span></div>
 <div class="box">
-<div style="font-size:30px">🔲</div>
+<div style="font-size:30px">📺</div>
 <h2>Connectez Votre Appareil</h2>
 <p>Entrez l'adresse MAC et la clé affichées sur votre écran de TV pour synchroniser votre playlist.</p>
 <label>Adresse MAC de l'Appareil</label>
-<input id="mac" type="text" placeholder="AA:C3:CB:87:92:29" value="AA:C3:CB:87:92:29">
+<input id="mac" type="text" placeholder="AA:C3:C8:87:92:29" value="AA:C3:C8:87:92:29">
 <label>Clé de l'Appareil</label>
 <input id="cle" type="text" placeholder="536462" value="536462">
-<button onclick="connecter()">→ Se Connecter & Gérer les Playlists</button>
+<button onclick="connecter()">>> Se Connecter & Gérer les Playlists</button>
 <p style="margin-top:15px">SW PLAYER © 2026. Pour le renouvellement et l'activation, contactez un revendeur agréé.</p>
 </div>
 <script>
+let macInput = document.getElementById('mac');
+macInput.addEventListener('input', function(){
+  let v = this.value.replace(/[^A-Fa-f0-9]/g, '').toUpperCase();
+  let out = '';
+  for(let i=0; i<v.length; i++){
+    if(i>0 && i%2==0) out += ':';
+    out += v[i];
+  }
+  this.value = out.slice(0,17);
+});
 function connecter(){
-  let mac=document.getElementById('mac').value.trim();
-  let cle=document.getElementById('cle').value.trim();
-  if(!mac||!cle){alert('3mer MAC w Clé');return;}
-  localStorage.setItem('sw_mac',mac);
-  localStorage.setItem('sw_cle',cle);
+  let mac = document.getElementById('mac').value.trim();
+  let cle = document.getElementById('cle').value.trim();
+  if(!mac || !cle){ alert('3mer MAC w Clé'); return; }
+  localStorage.setItem('sw_mac', mac);
+  localStorage.setItem('sw_cle', cle);
   location.href='dashboard.html?mac='+encodeURIComponent(mac);
 }
-</script></body></html>
+</script>
+</body>
+</html>
