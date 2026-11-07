@@ -1,58 +1,37 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ADIL CINEMA - Portal</title>
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SW PLAYER - Portal</title>
 <style>
-body{margin:0;font-family:Arial;background:#0a0a2e;color:white;min-height:100vh}
-.top{padding:15px 20px;color:#00e5ff;font-weight:bold;font-size:20px}
-.box{max-width:420px;margin:60px auto;background:#2a1a8a;padding:30px;border-radius:15px;text-align:center;box-shadow:0 0 40px #00e5ff55}
-input{width:100%;padding:13px;margin:8px 0 15px 0;border-radius:8px;border:none;background:#0a0a2e;color:white;font-size:16px;box-sizing:border-box;outline:none}
-input:focus{outline:2px solid #00e5ff}
-button{width:100%;padding:14px;border:none;border-radius:8px;background:#00e5ff;color:#000;font-weight:bold;font-size:16px;cursor:pointer}
-#msg{margin-top:15px;min-height:20px;font-size:14px;color:#ffdd00}
-</style>
-</head>
+body{margin:0;background:#05081f;color:white;font-family:Arial;display:flex;justify-content:center;align-items:center;min-height:100vh}
+.box{background:#0d1330;padding:30px;border-radius:20px;width:90%;max-width:420px;text-align:center}
+h2{margin:10px 0 5px} p{color:#aaa;font-size:13px}
+label{display:block;text-align:left;margin:15px 0 5px;font-size:13px}
+input{width:100%;padding:14px;border-radius:10px;border:1px solid #222;background:#05081f;color:white;box-sizing:border-box;font-size:16px;letter-spacing:1px}
+input::placeholder{color:#555}
+button{width:100%;padding:14px;border:none;border-radius:10px;background:#00cfff;color:white;font-weight:bold;font-size:15px;margin-top:20px;cursor:pointer}
+.top{position:fixed;top:0;left:0;right:0;padding:15px 20px;display:flex;justify-content:space-between;font-weight:bold}
+</style></head>
 <body>
-<div class="top">ADIL CINEMA</div>
+<div class="top"><span>SW PLAYER</span><span>Portal Playlist Utilisateur</span></div>
 <div class="box">
+<div style="font-size:30px">🔲</div>
 <h2>Connectez Votre Appareil</h2>
-<p>Entrez MAC et Clé pour gérer vos playlists</p>
-<label style="float:left;font-size:13px">Adresse MAC de l'Appareil</label>
-<input id="mac" placeholder="00:00:00:00:00:00" maxlength="17" autocomplete="off">
-<label style="float:left;font-size:13px">Clé de l'Appareil</label>
-<input id="cle" type="password" placeholder="••••••">
-<button onclick="login()">Se Connecter & Gérer les Playlists</button>
-<div id="msg"></div>
+<p>Entrez l'adresse MAC et la clé affichées sur votre écran de TV pour synchroniser votre playlist.</p>
+<label>Adresse MAC de l'Appareil</label>
+<input id="mac" type="text" placeholder="AA:C3:CB:87:92:29" value="AA:C3:CB:87:92:29">
+<label>Clé de l'Appareil</label>
+<input id="cle" type="text" placeholder="536462" value="536462">
+<button onclick="connecter()">→ Se Connecter & Gérer les Playlists</button>
+<p style="margin-top:15px">SW PLAYER © 2026. Pour le renouvellement et l'activation, contactez un revendeur agréé.</p>
 </div>
 <script>
-// كيدير النقط بوحدو و كيحيد الحروف الغالطة
-document.getElementById('mac').addEventListener('input', function(e){
-  let v = e.target.value.toUpperCase().replace(/[^0-9A-F]/g,'').slice(0,12);
-  let out = [];
-  for(let i=0;i<v.length;i+=2){ out.push(v.substr(i,2)); }
-  e.target.value = out.join(':');
-});
-function login(){
-  let mac = document.getElementById('mac').value;
-  let cle = document.getElementById('cle').value;
-  let msg = document.getElementById('msg');
-  if(mac.length < 17){
-    msg.textContent = "⚠️ كتب MAC كامل: 12 حرف، مثلا AA:BB:CC:DD:EE:FF";
-    return;
-  }
-  if(cle.length < 3){
-    msg.textContent = "⚠️ كتب Clé - على الأقل 3 حروف";
-    return;
-  }
-  msg.style.color = "#00ff88";
-  msg.textContent = "✅ Dkhelti! MAC: " + mac;
-  localStorage.setItem('adil_mac', mac);
-  localStorage.setItem('adil_cle', cle);
-  // من بعد 1 ثانية، سير للصفحة ديال playlists
-  setTimeout(()=>{ window.location.href = "index.html?mac=" + encodeURIComponent(mac); }, 1000);
+function connecter(){
+  let mac=document.getElementById('mac').value.trim();
+  let cle=document.getElementById('cle').value.trim();
+  if(!mac||!cle){alert('3mer MAC w Clé');return;}
+  localStorage.setItem('sw_mac',mac);
+  localStorage.setItem('sw_cle',cle);
+  location.href='dashboard.html?mac='+encodeURIComponent(mac);
 }
-</script>
-</body>
-</html>
+</script></body></html>
